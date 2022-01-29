@@ -12,13 +12,14 @@ class CartScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cart'),
+        elevation: 0,
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
-            Text('meals'),
+            Text('products'),
             CartListWidget(),
             CartBottomWidget(),
           ],

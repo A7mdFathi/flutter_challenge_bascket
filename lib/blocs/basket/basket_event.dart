@@ -27,9 +27,18 @@ class RemoveItem extends BasketEvent {
   List<Object> get props => [item];
 }
 
-class RemoveAllItem extends BasketEvent {
-  const RemoveAllItem();
+class ClearAllItem extends BasketEvent {
+  const ClearAllItem();
 
   @override
   List<Object> get props => [];
+}
+
+class RemoveAllItem extends BasketEvent {
+  final Product item;
+
+  const RemoveAllItem(this.item);
+
+  @override
+  List<Object> get props => [item];
 }

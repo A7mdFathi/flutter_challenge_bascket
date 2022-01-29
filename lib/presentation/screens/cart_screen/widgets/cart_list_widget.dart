@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:on_market_challenge/blocs/basket/basket_bloc.dart';
 import 'package:on_market_challenge/data/models/basket_model.dart';
+import 'package:on_market_challenge/data/models/product/product.dart';
 
 class CartListWidget extends StatelessWidget {
   const CartListWidget({
@@ -15,7 +16,6 @@ class CartListWidget extends StatelessWidget {
       child: BlocBuilder<BasketBloc, BasketState>(
         builder: (context, state) {
           if (state is BasketLoaded && state.basket.items.isNotEmpty) {
-            final items = state.basket.items;
             return ListView.builder(
               itemCount:
                   state.basket.itemQuantity(state.basket.items).keys.length,
@@ -56,6 +56,8 @@ class _CartItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Product item =
+        basket.itemQuantity(basket.items).keys.elementAt(index);
     return Dismissible(
       key: UniqueKey(),
       background: Container(
@@ -72,21 +74,20 @@ class _CartItemWidget extends StatelessWidget {
       direction: DismissDirection.startToEnd,
       onDismissed: (direction) {
         if (direction == DismissDirection.startToEnd) {
-          context
-              .read<BasketBloc>()
-              .add(RemoveItem(basket.items.elementAt(index)));
+          context.read<BasketBloc>().add(RemoveAllItem(
+              basket.itemQuantity(basket.items).keys.elementAt(index)));
         }
       },
       child: Container(
         width: double.infinity,
-        margin: const EdgeInsets.only(top: 5),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 30,
-          vertical: 10,
+        margin: EdgeInsets.only(top: 6.h),
+        padding: EdgeInsets.symmetric(
+          horizontal: 16.w,
+          vertical: 10.h,
         ),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(5.0),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -97,20 +98,20 @@ class _CartItemWidget extends StatelessWidget {
                     color: Theme.of(context).colorScheme.secondary,
                   ),
             ),
-            SizedBox(
-              width: 20,
-            ),
+            SizedBox(width: 16.w),
             Expanded(
               child: Text(
-                '${basket.itemQuantity(basket.items).keys.elementAt(index).name}',
+                '${item.name}',
                 textAlign: TextAlign.left,
                 style: Theme.of(context).textTheme.headline6,
               ),
             ),
             Text(
-              '\$${basket.itemQuantity(basket.items).keys.elementAt(index).price}',
+              item.hasDiscount! ? '${item.discountedPrice}' : '\$${item.price}',
               style: Theme.of(context).textTheme.headline6,
             ),
+            if (item.hasDiscount!)
+              const Icon(Icons.price_change, color: Colors.green),
           ],
         ),
       ),

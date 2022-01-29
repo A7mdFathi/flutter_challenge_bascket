@@ -47,7 +47,7 @@ class CartBottomWidget extends StatelessWidget {
                   final state = context.watch<BasketBloc>().state;
                   return ElevatedButton(
                       onPressed: () {
-                        context.read<BasketBloc>().add(const RemoveAllItem());
+                        context.read<BasketBloc>().add(const ClearAllItem());
                         ScaffoldMessenger.of(context)
                             .showSnackBar(const SnackBar(
                           content: Text('Order Success check order list'),

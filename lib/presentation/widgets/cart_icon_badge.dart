@@ -14,7 +14,7 @@ class CartBadgeWidget extends StatelessWidget {
           child: const Icon(Icons.shopping_cart),
           badgeContent: state is BasketLoaded
               ? Text(
-                  state.basket.items.length.toString(),
+                  '${state.basket.itemQuantity(state.basket.items).keys.length}',
                   style: const TextStyle(
                     color: Colors.white,
                   ),

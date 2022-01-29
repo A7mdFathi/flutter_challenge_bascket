@@ -34,8 +34,11 @@ class Basket extends Equatable {
     return quantity;
   }
 
-  double get subtotal =>
-      items.fold(0.0, (total, current) => total + current.price!);
+  double get subtotal => items.fold(
+      0.0,
+      (total, current) =>
+          total +
+          (current.hasDiscount! ? current.discountedPrice : current.price)!);
 
   double total(subtotal) {
     return subtotal + 5;

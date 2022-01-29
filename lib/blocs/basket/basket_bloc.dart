@@ -7,7 +7,6 @@ import 'package:on_market_challenge/data/models/basket_model.dart';
 import 'package:on_market_challenge/data/models/product/product.dart';
 
 part 'basket_event.dart';
-
 part 'basket_state.dart';
 
 @injectable
@@ -16,7 +15,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
     on<StartBasket>(_onStartBasket);
     on<AddItem>(_onAddItem);
     on<RemoveItem>(_onRemoveItem);
-    on<RemoveAllItem>(_onRemoveAllItem);
+    on<ClearAllItem>(_onClearAllItems);
+    on<RemoveAllItem>(_onRemoveAllITem);
   }
 
   void _onStartBasket(
@@ -72,8 +72,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
     }
   }
 
-  void _onRemoveAllItem(
-    RemoveAllItem event,
+  void _onClearAllItems(
+    ClearAllItem event,
     Emitter<BasketState> emit,
   ) {
     final state = this.state;
@@ -83,6 +83,25 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         emit(
           BasketLoaded(
             basket: state.basket.copyWith(items: []),
+          ),
+        );
+      } catch (_) {
+        rethrow;
+      }
+    }
+  }
+
+  _onRemoveAllITem(RemoveAllItem event, Emitter<BasketState> emit) {
+    final state = this.state;
+
+    if (state is BasketLoaded) {
+      try {
+        emit(
+          BasketLoaded(
+            basket: state.basket.copyWith(
+              items: List.from(state.basket.items)
+                ..removeWhere((item) => item == event.item),
+            ),
           ),
         );
       } catch (_) {
