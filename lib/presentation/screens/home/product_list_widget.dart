@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:on_market_challenge/blocs/basket/basket_bloc.dart';
+import 'package:on_market_challenge/blocs/products_bloc/product_bloc.dart';
 import 'package:on_market_challenge/data/models/product/product.dart';
 
 import 'details_sheet.dart';
@@ -11,29 +12,37 @@ enum productCategory { topRated, mostSelling, recentlyViewed }
 class RestaurantListWidget extends StatelessWidget {
   const RestaurantListWidget({
     Key? key,
-    required this.restaurants,
+    // required this.restaurants,
     required this.category,
   }) : super(key: key);
 
-  final List<Product> restaurants;
+  // final List<Product> restaurants;
   final productCategory category;
 
   @override
   Widget build(BuildContext context) {
-    final products = restaurants.where((element) {
-      debugPrint('${category.index} ${element.categoryId}');
-      return element.categoryId == category.index.toString();
-    }).toList();
-    // debugPrint('${category.index} ${products.length}');
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(vertical: 8.h),
-      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      scrollDirection: Axis.vertical,
-      itemCount: products.length,
-      itemBuilder: (context, index) => RestaurantViewItem(
-        index: index,
-        restaurant: products[index],
-      ),
+    return BlocBuilder<ProductsBloc, ProductsState>(
+      builder: (context, state) {
+        if (state is ProductsLoadedSuccess) {
+          //load data based on category
+          final products = state.productList.where((element) {
+            debugPrint('${category.index} ${element.categoryId}');
+            return element.categoryId == category.index.toString();
+          }).toList();
+          return ListView.builder(
+            padding: EdgeInsets.symmetric(vertical: 8.h),
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            scrollDirection: Axis.vertical,
+            itemCount: products.length,
+            itemBuilder: (context, index) => RestaurantViewItem(
+              index: index,
+              restaurant: products[index],
+            ),
+          );
+        } else {
+          return const SizedBox();
+        }
+      },
     );
   }
 }

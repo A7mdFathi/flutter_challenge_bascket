@@ -15,6 +15,7 @@ class DetailsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //product details
     return Container(
       color: Colors.white,
       height: 0.8.sh,

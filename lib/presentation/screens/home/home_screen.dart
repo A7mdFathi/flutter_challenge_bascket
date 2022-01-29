@@ -7,6 +7,7 @@ import 'package:on_market_challenge/presentation/screens/home/product_list_widge
 import 'package:on_market_challenge/presentation/widgets/cart_icon_badge.dart';
 import 'package:on_market_challenge/utils/app_routes_name.dart';
 
+//sample from category
 const categoryList = ['Top Rated', 'Most Selling', 'Recently viewed'];
 
 class HomeScreen extends StatefulWidget {
@@ -32,6 +33,23 @@ class _HomeScreenState extends State<HomeScreen>
     super.dispose();
   }
 
+  //tabs
+  final _categories = categoryList.map((e) => Tab(text: e)).toList();
+  final _pages = [
+    const RestaurantListWidget(
+      // restaurants: products,
+      category: productCategory.mostSelling,
+    ),
+    const RestaurantListWidget(
+      // restaurants: products,
+      category: productCategory.recentlyViewed,
+    ),
+    const RestaurantListWidget(
+      // restaurants: products,
+      category: productCategory.topRated,
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -48,41 +66,14 @@ class _HomeScreenState extends State<HomeScreen>
           ],
           bottom: TabBar(
             controller: _tabController,
-            tabs: categoryList
-                .map(
-                  (e) => Tab(
-                    text: e,
-                  ),
-                )
-                .toList(),
+            tabs: _categories,
           ),
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-          child: BlocBuilder<ProductsBloc, ProductsState>(
-            builder: (context, state) {
-              if (state is ProductsLoadedSuccess) {
-                final products = state.productList;
-                return TabBarView(
-                  children: [
-                    RestaurantListWidget(
-                      restaurants: products,
-                      category: productCategory.mostSelling,
-                    ),
-                    RestaurantListWidget(
-                      restaurants: products,
-                      category: productCategory.recentlyViewed,
-                    ),
-                    RestaurantListWidget(
-                      restaurants: products,
-                      category: productCategory.topRated,
-                    ),
-                  ],
-                  controller: _tabController,
-                );
-              }
-              return const SizedBox();
-            },
+          child: TabBarView(
+            children: _pages,
+            controller: _tabController,
           ),
         ),
       ),
